@@ -26,8 +26,8 @@ import { toast } from 'sonner'
 
 
 export default function HelperHeader() {
-     const ENDPOINT='http://localhost:8080';
-    // const ENDPOINT='https://code-paint-server-git-main-saksham-vermas-projects.vercel.app';
+    // const ENDPOINT='http://localhost:8080';
+    const ENDPOINT='https://newserver-2-1t7c.onrender.com';
     const [saveLoading, setSaveLoading] = useState<boolean>(false);
     const [shareBtn, setSharebtn] = useState<boolean>(false);
     const navigate = useNavigate();
