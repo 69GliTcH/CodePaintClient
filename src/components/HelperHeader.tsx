@@ -62,7 +62,7 @@ export default function HelperHeader() {
     return (
         <div className='_helper_header h-[50px] bg-black text-white p-2 flex justify-between items-center'>
             <div className="_btn_container flex gap-2">
-                <Button variant='success' onClick={handleSaveCode} disabled={saveLoading}>
+{/*                 <Button variant='success' onClick={handleSaveCode} disabled={saveLoading}>
                     {saveLoading ? <><Loader2 className='animate-spin' size={16} /> Saving</>
                         : "Save"}
                 </Button>
@@ -94,7 +94,7 @@ export default function HelperHeader() {
                             </DialogHeader>
                         </DialogContent>
                     </Dialog>
-                }
+                } */}
             </div>
             <div className="_tab_switcher flex justify-center items-center gap-1">
                 <small>Language:</small>
