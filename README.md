@@ -115,7 +115,3 @@ The app runs at: [https://livecodepaint.netlify.app]
 * Personal **sandbox environment** for experimenting with code.
 
 ---
-
-## 🗣 Interview Summary (2 min pitch)
-
-> *"CodePaintClient is a React + TypeScript front-end playground where users can write HTML, CSS, and JavaScript with live preview. I used Redux for managing code state and rendered it inside a sandboxed iframe for real-time output. The project strengthened my understanding of state management, component design, and performance optimization in front-end apps."*
