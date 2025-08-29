@@ -1,4 +1,3 @@
-// src/utils/firestoreHelpers.ts
 import { db } from "./firebase";
 import { doc, setDoc, getDoc } from "firebase/firestore";
 import { compilerSliceStateType } from "@/redux/slices/compilerSlice";
@@ -33,8 +32,10 @@ export async function loadCode(urlId: string) {
 
         if (docSnap.exists()) {
             const data = docSnap.data();
-            // Return fullCode directly for Redux
-            return data?.fullCode as compilerSliceStateType["fullCode"];
+            return {
+                fullCode: data?.fullCode as compilerSliceStateType["fullCode"],
+                currentLang: data?.currentLang as compilerSliceStateType["currentLang"] || "html",
+            };
         }
 
         return null;

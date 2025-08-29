@@ -1,18 +1,18 @@
-import { Button } from './ui/button'
-import { ClipboardCopy, ExternalLink, FileCode2, Loader2 } from 'lucide-react'
+import { Button } from './ui/button';
+import { ClipboardCopy, ExternalLink, FileCode2, Loader2 } from 'lucide-react';
 import {
     Select,
     SelectContent,
     SelectItem,
     SelectTrigger,
     SelectValue,
-} from "@/components/ui/select"
-import { useDispatch, useSelector } from 'react-redux'
-import { compilerSliceStateType, updateCurrentLang } from '@/redux/slices/compilerSlice'
-import { RootState } from '@/redux/store'
-import { handleError } from '@/utils/handleError'
-import { useNavigate, useParams } from 'react-router-dom'
-import { useEffect, useState, useCallback } from 'react'
+} from "@/components/ui/select";
+import { useDispatch, useSelector } from 'react-redux';
+import { compilerSliceStateType, updateCurrentLang, updateFullCode } from '@/redux/slices/compilerSlice';
+import { RootState } from '@/redux/store';
+import { handleError } from '@/utils/handleError';
+import { useNavigate, useParams } from 'react-router-dom';
+import { useEffect, useState, useCallback } from 'react';
 import {
     Dialog,
     DialogContent,
@@ -20,12 +20,11 @@ import {
     DialogHeader,
     DialogTitle,
     DialogTrigger,
-} from "@/components/ui/dialog"
-import { toast } from 'sonner'
-
-// Firestore
-import { db } from "@/utils/firebase"
-import { collection, doc, setDoc } from "firebase/firestore"
+} from "@/components/ui/dialog";
+import { toast } from 'sonner';
+import { loadCode } from "@/utils/firestoreHelpers";
+import { db } from "@/utils/firebase";
+import { collection, doc, setDoc, getDoc } from "firebase/firestore";
 
 export default function HelperHeader() {
     const [saveLoading, setSaveLoading] = useState(false);
@@ -38,33 +37,56 @@ export default function HelperHeader() {
     const fullCode = useSelector((state: RootState) => state.compilerSlice.fullCode);
     const currentLang = useSelector((state: RootState) => state.compilerSlice.currentLang);
 
-    // Enable Share button only if we already have a Firestore ID
+    // If this is a shared URL, fetch saved code from Firestore on mount
     useEffect(() => {
         setShareBtn(!!urlId);
-    }, [urlId]);
 
-    // Save code to Firestore (new snippet)
+        const fetchSavedCode = async () => {
+            if (urlId) {
+                try {
+                    const docRef = doc(db, "snippets", urlId);
+                    const snapshot = await getDoc(docRef);
+                    if (snapshot.exists()) {
+                        const data = snapshot.data();
+                        if (data.fullCode && data.currentLang) {
+                            dispatch(updateFullCode(data.fullCode));
+                            dispatch(updateCurrentLang(data.currentLang));
+                        }
+                    } else {
+                        toast.error("Snippet not found!");
+                    }
+                } catch (error) {
+                    handleError(error);
+                }
+            }
+        };
+
+        fetchSavedCode();
+    }, [urlId, dispatch]);
+
     const handleSaveCode = useCallback(async () => {
-        if (
-            !fullCode.html.trim() &&
-            !fullCode.css.trim() &&
-            !fullCode.javascript.trim()
-        ) {
+        if (!fullCode.html.trim() && !fullCode.css.trim() && !fullCode.javascript.trim()) {
             toast.error("Nothing to save!");
             return;
         }
 
         setSaveLoading(true);
         try {
-            // Generate a new Firestore doc with random ID
-            const newDocRef = doc(collection(db, "snippets"));
+            const newDocRef = urlId ? doc(db, "snippets", urlId) : doc(collection(db, "snippets"));
             await setDoc(newDocRef, {
                 fullCode,
                 currentLang,
+                updatedAt: new Date().toISOString(),
                 createdAt: new Date().toISOString(),
             });
 
-            // Redirect to new snippet page
+            // Sync Redux state with saved Firestore data
+            const saved = await loadCode(newDocRef.id);
+            if (saved) {
+                dispatch(updateFullCode(saved.fullCode));
+                dispatch(updateCurrentLang(saved.currentLang));
+            }
+
             navigate(`/compiler/${newDocRef.id}`, { replace: true });
             toast.success("Code saved successfully!");
         } catch (error) {
@@ -72,9 +94,8 @@ export default function HelperHeader() {
         } finally {
             setSaveLoading(false);
         }
-    }, [fullCode, currentLang, navigate]);
+    }, [fullCode, currentLang, urlId, navigate, dispatch]);
 
-    // Copy current URL
     const handleCopyUrl = () => {
         const url = window.location.href;
         if (navigator.clipboard) {
@@ -87,7 +108,6 @@ export default function HelperHeader() {
 
     return (
         <div className="h-[50px] bg-black text-white p-2 flex justify-between items-center">
-            {/* Save & Share buttons */}
             <div className="flex gap-2">
                 <Button
                     variant="success"
@@ -118,7 +138,6 @@ export default function HelperHeader() {
                                 </DialogDescription>
                             </DialogHeader>
 
-                            {/* ✅ Complex UI stays outside */}
                             <div className="flex flex-col gap-2 mt-2">
                                 <div className="flex gap-1">
                                     <input
@@ -137,17 +156,14 @@ export default function HelperHeader() {
                                 </p>
                             </div>
                         </DialogContent>
-
-
                     </Dialog>
                 )}
             </div>
 
-            {/* Language Switcher */}
             <div className="flex items-center gap-1">
                 <small>Language:</small>
                 <Select
-                    defaultValue={currentLang}
+                    value={currentLang}
                     onValueChange={(value) =>
                         dispatch(updateCurrentLang(value as compilerSliceStateType["currentLang"]))
                     }
