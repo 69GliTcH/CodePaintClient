@@ -1,4 +1,4 @@
-import React, { useCallback } from "react";
+import { useCallback } from "react";
 import ReactCodeMirror from "@uiw/react-codemirror";
 import { tags as t } from "@lezer/highlight";
 import { tokyoNightInit } from "@uiw/codemirror-theme-tokyo-night";
@@ -27,7 +27,7 @@ export default function CodeEditor() {
 
     return (
         <ReactCodeMirror
-            value={fullCode[currentLang]} // ✅ Prefilled from Firebase if loaded
+            value={fullCode[currentLang]}
             className="code-editor"
             height="calc(100vh - 60px - 50px)"
             extensions={[languageExtension]}

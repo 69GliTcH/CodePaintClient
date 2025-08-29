@@ -13,6 +13,7 @@ export default function Compiler() {
     const { urlId } = useParams();
     const dispatch = useDispatch();
     const fullCode = useSelector((state: RootState) => state.compilerSlice.fullCode);
+    const currentLang = useSelector((state: RootState) => state.compilerSlice.currentLang);
 
     // Load code from Firebase when visiting a URL
     useEffect(() => {
@@ -25,13 +26,12 @@ export default function Compiler() {
         }
     }, [urlId, dispatch]);
 
-    // Optional: Auto-save only after user edits, not immediately on load
+    // Auto-save after edits
     useEffect(() => {
         if (urlId && fullCode && Object.values(fullCode).some(code => code.trim() !== "")) {
-            // ✅ Only save if there is actual content
-            saveCode(urlId, fullCode);
+            saveCode(urlId, fullCode, currentLang);
         }
-    }, [fullCode, urlId]);
+    }, [fullCode, urlId, currentLang]);
 
     return (
         <ResizablePanelGroup direction="horizontal">
