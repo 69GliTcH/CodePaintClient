@@ -1,40 +1,39 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
-
 export interface compilerSliceStateType {
-    fullCode: {
-        html: string;
-        css: string;
-        javascript: string;
-    };
-    currentLang: "html" | "css" | "javascript";
+  fullCode: {
+    html: string;
+    css: string;
+    javascript: string;
+  };
+  currentLang: "html" | "css" | "javascript";
 }
 
 const initialState: compilerSliceStateType = {
-    fullCode: {
-        html: `
+  fullCode: {
+    html: `
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Welcome to CodePaint</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Welcome to CodePaint</title>
 </head>
 <body>
-    <div class="welcome-container">
-        <div class="welcome-text">
-            <h1>Welcome to CodePaint</h1>
-            <p>The best place to build, test, and discover front-end code.</p>
-        </div>
-        <div class="moving-elements">
-            <div class="circle"></div>
-            <div class="triangle"></div>
-            <div class="square"></div>
-        </div>
+  <div class="welcome-container">
+    <div class="welcome-text">
+      <h1>Welcome to CodePaint</h1>
+      <p>The best place to build, test, and discover front-end code.</p>
     </div>
+    <div class="moving-elements">
+      <div class="circle"></div>
+      <div class="triangle"></div>
+      <div class="square"></div>
+    </div>
+  </div>
 </body>
 </html>
-        `,
-        css: `
+    `,
+    css: `
 body {
   margin: 0;
   font-family: 'Arial', sans-serif;
@@ -139,30 +138,44 @@ body {
   75% { top: 25%; left: 75%; }
   100% { top: 50%; left: 100%; }
 }
-
-        `,
-        javascript: `
+    `,
+    javascript: `
 document.addEventListener('DOMContentLoaded', function() {
   console.log('Welcome to CodePaint! Enjoy coding!');
 });
-        `,
-    },
-    currentLang: "html",
-}
+    `,
+  },
+  currentLang: "html",
+};
+
 const compilerSlice = createSlice({
-    name: 'compilerSlice',
-    initialState,
-    reducers: {
-        updateCurrentLang: (state, action: PayloadAction<compilerSliceStateType["currentLang"]>) => {
-            state.currentLang = action.payload;
-        },
-        updateCodeValue: (state, action: PayloadAction<string>) => {
-            state.fullCode[state.currentLang] = action.payload;
-        },
-        updateFullCode: (state, action: PayloadAction<compilerSliceStateType["fullCode"]>) => {
-            state.fullCode = action.payload;
-        }
+  name: "compilerSlice",
+  initialState,
+  reducers: {
+    updateCurrentLang: (
+      state,
+      action: PayloadAction<compilerSliceStateType["currentLang"]>
+    ) => {
+      state.currentLang = action.payload;
     },
+    updateCodeValue: (state, action: PayloadAction<string>) => {
+      state.fullCode[state.currentLang] = action.payload;
+    },
+    updateFullCode: (
+      state,
+      action: PayloadAction<compilerSliceStateType["fullCode"]>
+    ) => {
+      // Replace completely with what's loaded from Firebase
+      state.fullCode = {
+        html: action.payload.html ?? "",
+        css: action.payload.css ?? "",
+        javascript: action.payload.javascript ?? "",
+      };
+    },
+
+  },
 });
-export default compilerSlice.reducer
-export const { updateCurrentLang, updateCodeValue, updateFullCode } = compilerSlice.actions;
+
+export default compilerSlice.reducer;
+export const { updateCurrentLang, updateCodeValue, updateFullCode } =
+  compilerSlice.actions;
