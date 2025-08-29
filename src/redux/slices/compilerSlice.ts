@@ -46,7 +46,7 @@ body {
   align-items: center;
   justify-content: flex-start;
   height: 100vh;
-  background-color: #1e1e1e; /* dark theme background */
+  background-color: #111827; /* dark theme background */
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 

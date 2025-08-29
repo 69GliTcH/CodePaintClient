@@ -17,32 +17,36 @@ export default function CodeEditor() {
     );
 
     const onChange = useCallback(
-        (value: string) => {
-            // Update Redux state for live preview
-            dispatch(updateCodeValue(value));
-        },
+        (value: string) => dispatch(updateCodeValue(value)),
         [dispatch]
     );
 
-    // Load the appropriate language extension for CodeMirror
     const languageExtension = loadLanguage(currentLang) || [];
 
     return (
         <ReactCodeMirror
-            key={currentLang} // Remount editor if language changes
+            key={currentLang}
             value={fullCode[currentLang]}
-            className="code-editor"
-            height="calc(100vh - 60px - 50px)" // Full height minus header
+            className="code-editor rounded-2xl"
+            height="calc(100vh - 60px - 50px)"
             extensions={[languageExtension]}
             onChange={onChange}
             theme={tokyoNightInit({
                 settings: {
-                    caret: "#c6c6c6",
+                    caret: "#ffffff",
+                    background: "#111827",
                     fontFamily: "monospace",
                     fontSize: "16px",
-                    background: "#1A2130",
+                    selection: "#ffffff33",
                 },
-                styles: [{ tag: t.comment, color: "#6272a4" }],
+                styles: [
+                    { tag: t.comment, color: "#6272a4" },
+                    { tag: t.keyword, color: "#ff79c6", fontWeight: "bold" },
+                    { tag: t.string, color: "#f1fa8c" },
+                    { tag: t.number, color: "#bd93f9" },
+                    { tag: t.variableName, color: "#50fa7b" },
+                    { tag: t.function(t.variableName), color: "#8be9fd" },
+                ],
             })}
         />
     );
