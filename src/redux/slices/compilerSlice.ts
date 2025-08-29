@@ -12,137 +12,172 @@ export interface compilerSliceStateType {
 const initialState: compilerSliceStateType = {
   fullCode: {
     html: `
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Welcome to CodePaint</title>
+  <title>Crazy Bouncing Ball</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <div class="welcome-container">
-    <div class="welcome-text">
-      <h1>Welcome to CodePaint</h1>
-      <p>The best place to build, test, and discover front-end code.</p>
-    </div>
-    <div class="moving-elements">
-      <div class="circle"></div>
-      <div class="triangle"></div>
-      <div class="square"></div>
-    </div>
+  <h1>Welcome to CodePaint</h1>
+  <div id="box">
+    <div id="ball"></div>
+    <div class="impact top"></div>
+    <div class="impact bottom"></div>
+    <div class="impact left"></div>
+    <div class="impact right"></div>
   </div>
+  
+  <!-- Subtitle -->
+  <p id="subtitle">Your virtual front-end playground.</p>
+
+  <script src="script.js"></script>
 </body>
 </html>
+
     `,
     css: `
 body {
   margin: 0;
-  font-family: 'Arial', sans-serif;
-  background-color: #111;
-  color: #fff;
-  overflow: hidden;
-}
-
-.welcome-container {
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start;
   height: 100vh;
-  text-align: center;
+  background-color: #1e1e1e; /* dark theme background */
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
-.welcome-text h1 {
-  font-size: 3em;
-  margin-bottom: 20px;
+h1 {
+  margin: 30px 0;
+  font-size: 3rem;
+  color: #f5f5f5; /* light color for contrast */
+  letter-spacing: 2px;
 }
 
-.welcome-text p {
-  font-size: 1.5em;
-  margin-bottom: 40px;
+#box {
+  width: 600px;
+  height: 450px;
+  border: 3px solid #4a90e2;
+  border-radius: 12px;
+  background-color: #2c2c2c; /* dark box */
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.7);
+  margin-bottom: 20px; /* space for subtitle */
 }
 
-.welcome-text button {
-  padding: 10px 20px;
-  font-size: 1.2em;
-  color: #fff;
-  background-color: #f9a825;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  transition: background-color 0.3s;
-}
-
-.welcome-text button:hover {
-  background-color: #c79100;
-}
-
-.moving-elements {
+/* Ball styling */
+#ball {
+  width: 50px;
+  height: 50px;
+  background: linear-gradient(135deg, #50e3c2, #4a90e2);
+  border: 2px solid #ffffff;
+  border-radius: 50%;
   position: absolute;
   top: 0;
   left: 0;
-  width: 100%;
-  height: 100%;
-  overflow: hidden;
-  z-index: -1;
+  box-shadow: 0 4px 15px rgba(0,255,255,0.5);
 }
 
-.moving-elements div {
+/* Wall impact effects */
+.impact {
   position: absolute;
-  opacity: 0.7;
+  background: rgba(255, 255, 0, 0.5); /* neon yellow flash */
+  pointer-events: none;
+  opacity: 0;
 }
 
-.circle {
-  width: 50px;
-  height: 50px;
-  background-color: #f9a825;
-  border-radius: 50%;
-  animation: moveCircle 15s linear infinite;
+.impact.top, .impact.bottom {
+  height: 10px;
+  width: 100%;
+  left: 0;
 }
 
-.triangle {
-  width: 0;
-  height: 0;
-  border-left: 30px solid transparent;
-  border-right: 30px solid transparent;
-  border-bottom: 60px solid #f9a825;
-  animation: moveTriangle 10s linear infinite;
+.impact.left, .impact.right {
+  width: 10px;
+  height: 100%;
+  top: 0;
 }
 
-.square {
-  width: 50px;
-  height: 50px;
-  background-color: #f9a825;
-  animation: moveSquare 12s linear infinite;
+/* initial positions */
+.impact.top { top: 0; }
+.impact.bottom { bottom: 0; }
+.impact.left { left: 0; }
+.impact.right { right: 0; }
+
+/* Impact animation */
+@keyframes flash {
+  0% { opacity: 1; }
+  100% { opacity: 0; }
 }
 
-@keyframes moveCircle {
-  0% { top: 0; left: 0; }
-  25% { top: 50%; left: 25%; }
-  50% { top: 100%; left: 50%; }
-  75% { top: 50%; left: 75%; }
-  100% { top: 0; left: 100%; }
+.impact.active {
+  animation: flash 0.2s ease-out;
 }
 
-@keyframes moveTriangle {
-  0% { top: 100%; left: 0; }
-  25% { top: 50%; left: 25%; }
-  50% { top: 0; left: 50%; }
-  75% { top: 50%; left: 75%; }
-  100% { top: 100%; left: 100%; }
+/* Subtitle styling */
+#subtitle {
+  color: #cfcfcf; /* subtle light gray */
+  font-size: 1.2rem; /* medium-small font */
+  text-align: center;
+  margin-top: 10px;
 }
 
-@keyframes moveSquare {
-  0% { top: 50%; left: 0; }
-  25% { top: 75%; left: 25%; }
-  50% { top: 50%; left: 50%; }
-  75% { top: 25%; left: 75%; }
-  100% { top: 50%; left: 100%; }
-}
     `,
     javascript: `
-document.addEventListener('DOMContentLoaded', function() {
-  console.log('Welcome to CodePaint! Enjoy coding!');
-});
+const ball = document.getElementById('ball');
+const box = document.getElementById('box');
+
+// impact divs
+const impactTop = document.querySelector('.impact.top');
+const impactBottom = document.querySelector('.impact.bottom');
+const impactLeft = document.querySelector('.impact.left');
+const impactRight = document.querySelector('.impact.right');
+
+let posX = 0;
+let posY = 0;
+let speedX = Math.random() * 6 + 3; 
+let speedY = Math.random() * 6 + 3;
+
+function triggerImpact(impact) {
+  impact.classList.add('active');
+  setTimeout(() => impact.classList.remove('active'), 200);
+}
+
+function animate() {
+  const boxWidth = box.clientWidth - ball.offsetWidth;
+  const boxHeight = box.clientHeight - ball.offsetHeight;
+
+  posX += speedX;
+  posY += speedY;
+
+  // Bounce off left/right walls
+  if (posX <= 0 || posX >= boxWidth) {
+    speedX = -speedX;
+    speedX += (Math.random() - 0.5) * 2; 
+    posX = posX <= 0 ? 0 : boxWidth;
+    triggerImpact(posX === 0 ? impactLeft : impactRight);
+  }
+
+  // Bounce off top/bottom walls
+  if (posY <= 0 || posY >= boxHeight) {
+    speedY = -speedY;
+    speedY += (Math.random() - 0.5) * 2;
+    posY = posY <= 0 ? 0 : boxHeight;
+    triggerImpact(posY === 0 ? impactTop : impactBottom);
+  }
+
+  ball.style.left = posX + 'px';
+  ball.style.top = posY + 'px';
+
+  requestAnimationFrame(animate);
+}
+
+animate();
+
     `,
   },
   currentLang: "html",
