@@ -1,74 +1,127 @@
 import { Button } from "@/components/ui/button";
-import { Palette } from "lucide-react";
 import { Link } from "react-router-dom";
+import { Palette } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
+import { useEffect, useState } from "react";
 
 export default function Home() {
+  const cards = [
+    {
+      title: "Build & Test",
+      color: "text-blue-400",
+      content: `<h1>Build & Test</h1>
+<p>
+    Boost productivity by building 
+    full projects or quickly testing 
+    features and animations.
+</p>`,
+      tags: ["#html", "#css", "#javascript"],
+    },
+    {
+      title: "Learn & Debug",
+      color: "text-green-400",
+      content: `body {
+    Learn: Discover and Grow;
+    live_code: true;
+    testing: true;
+    debugging: true;
+}`,
+      tags: ["#debugging", "#testing", "#learning"],
+    },
+    {
+      title: "Share Your Work",
+      color: "text-purple-400",
+      content: `function greet(Welcome){
+    console.log("Share Your Work");
+    return\`Save and Share your code\`;
+}`,
+      tags: ["#save", "#share", "#showcase"],
+    },
+  ];
+
+  const [currentIndex, setCurrentIndex] = useState(0);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentIndex((prev) => (prev + 1) % cards.length);
+    }, 4000);
+    return () => clearInterval(interval);
+  }, []);
+
   return (
-    <div className="w-full h-[calc(100vh-60px)] text-white flex justify-center items-center flex-row bg-cyan-950">
-      <div className="text-white flex justify-center items-center flex-col gap-3 w-[50%]">
-        <div className="flex flex-row">
+    <div className="w-full min-h-[calc(100vh-60px)] bg-gradient-to-br from-cyan-950 via-indigo-900 to-purple-950 text-white flex flex-col items-center justify-start px-6 py-8">
+
+      {/* Header */}
+      <header className="flex flex-col md:flex-row items-center md:justify-between w-full max-w-6xl gap-6 md:gap-0 mb-10">
+        <div className="flex items-center gap-4">
           <Palette size={50} className="text-white" />
-          <h1 className="bg-gradient-to-r from-blue-600 via-green-500 to-indigo-400 inline-block text-transparent bg-clip-text text-8xl font-bold">CodePaint</h1>
+          <h1 className="text-5xl md:text-6xl font-extrabold bg-clip-text text-transparent bg-gradient-to-r from-blue-400 via-green-400 to-indigo-400">
+            CodePaint
+          </h1>
         </div>
-        <p className=" text-gray-400 text-center p-3">The best place to build, test, and discover front-end code.</p>
-        <p className=" text-center pb-3">CodePen is a social development environment for front-end designers <br />
-          and developers. Build and deploy a website, show off your work, build <br />
-          test cases to learn and debug, and find inspiration.</p>
-        <Link to="/compiler" className="animate-pulse">
-          <Button variant="default">Start Compiling</Button>
+        <Link to="/compiler">
+          <Button className="bg-gradient-to-r from-blue-500 to-purple-600 hover:from-purple-600 hover:to-blue-500 transition-all duration-300 shadow-lg px-6 py-3 text-lg font-semibold">
+            Start Compiling
+          </Button>
         </Link>
-        <p className="text-gray-400">Developed by <a href="https://sakshamverma.netlify.app" className="font-bold text-white">Saksham Verma</a>.</p>
-      </div>
-      <div className="w-[50%] ">
-        <div className="mx-20 flex flex-col gap-3">
+      </header>
 
-          <div className="cursor-pointer hover:scale-105 transition ease-in-out">
-            <div className="max-w-sm rounded-xl overflow-hidden shadow-lg bg-indigo-950">
-              <div className="px-6 py-2">
-                <div className=" text-lg mb-2 text-white"><span className="text-gray-400">&lt;</span><span className="text-red-600">h1</span><span className="text-gray-400">&gt;</span><span className="font-bold text-xl mb-2 text-white">Build & Test</span>&lt;<span className="text-red-600">/h1</span><span className="text-gray-400">&gt;</span></div>
-                <p className="text-white text-base font-semibold">
-                  &#160;&#160;&#160;&#160;&#160; <span className="text-gray-400">&lt;</span><span className="text-lime-500">p</span><span className="text-gray-400">&gt;</span><br />  &#160;&#160;&#160;&#160;&#160; &#160;&#160;&#160;&#160;&#160; Get work done quicker by building out<br /> &#160;&#160;&#160;&#160;&#160; &#160;&#160;&#160;&#160;&#160; entire projects or isolating code to test<br /> &#160;&#160;&#160;&#160;&#160; &#160;&#160;&#160;&#160;&#160; features and animations. <br /> &#160;&#160;&#160;&#160;&#160;<span className="text-gray-400">&lt;</span><span className="text-lime-500">/p</span><span className="text-gray-400">&gt;</span>
-                </p>
-              </div>
-              <div className="px-6 pt-2 pb-2">
-                <span className="inline-block text-white bg-teal-800 rounded-full px-3 py-1 text-sm font-semibold mr-2 mb-2">#html</span>
-                <span className="inline-block text-white bg-teal-800 rounded-full px-3 py-1 text-sm font-semibold mr-2 mb-2">#css</span>
-                <span className="inline-block text-white bg-teal-800 rounded-full px-3 py-1 text-sm font-semibold mr-2 mb-2">#javascript</span>
-              </div>
-            </div>
+      {/* Subtitle + Cards Section */}
+      <div className="w-full max-w-6xl flex flex-col md:flex-row items-start md:items-center gap-10 mb-10">
 
-          </div>
+        {/* Subtitle */}
+        <p className="text-center md:text-left text-gray-300 md:w-1/2 text-sm md:text-base">
+          The best place to build, test, and discover front-end code. CodePaint is a social development environment for front-end designers and developers. Build and deploy websites, showcase your work, create test cases to debug, and find inspiration.
+        </p>
 
-          <div className="mx-[150px] cursor-pointer hover:scale-105 transition ease-in-out">
-            <div className="max-w-xs rounded-xl overflow-hidden shadow-lg bg-indigo-950">
-              <div className="px-6 py-2">
-                <div className=" text-lg mb-2 text-white"><span className="text-cyan-400">body</span><span className="text-gray-400">&#123;</span><br /><span className="font-bold text-xl mb-2 text-white">&#160;&#160;&#160;&#160;&#160;Learn: Discover;</span></div>
-                <p className="text-white text-base font-semibold">
-                  &#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;<span className="text-blue-300">live_code</span><span className="text-gray-400">:</span> true<span className="text-gray-400">;</span><br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;<span className="text-blue-300">testing</span><span className="text-gray-400">:</span> true<span className="text-gray-400">;</span><br />&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;<span className="text-blue-300">debugging</span><span className="text-gray-400">:</span> true<span className="text-gray-400">;</span><br />
-                </p>
-                <p className=" text-lg mb-2 text-white"><span className="text-gray-400">&#125;</span></p>
-              </div>
-            </div>
-          </div>
-
-
-          <div className="cursor-pointer hover:scale-105 transition ease-in-out">
-            <div className="max-w-sm rounded-xl overflow-hidden shadow-lg bg-indigo-950">
-              <div className="px-6 py-2">
-                <div className=" text-lg mb-2 text-white"><span className="text-cyan-400">function</span> <span className="text-lime-500">greet</span><span className="text-gray-400">&#40;</span>Welcome<span className="text-gray-400">&#41;</span><span className="text-gray-400">&#123;</span><br />console<span className="text-gray-400">.</span><span className="text-cyan-400">log</span><span className="text-gray-400">&#40;</span><span className="font-bold text-xl mb-2 text-white">Share Your Work</span><span className="text-gray-400">&#41;;</span></div>
-                <p className="text-white text-base font-semibold">
-                  <span className="text-orange-500">//Show your code directly in the browser.</span> <br />
-                  <span className="text-red-600">return</span> <span className="text-gray-400">`</span>Save and Share your code<span className="text-gray-400">`;</span>
-                </p>
-                <p className=" text-lg mb-2 text-black"><span className="text-gray-400">&#125;</span></p>
-              </div>
-            </div>
-          </div>
+        {/* Glass Card Smooth Slider */}
+        <div className="relative flex justify-center md:w-1/2">
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={currentIndex}
+              initial={{ x: 100, opacity: 0 }}
+              animate={{ x: 0, opacity: 1 }}
+              exit={{ x: -100, opacity: 0 }}
+              transition={{ duration: 1, ease: "easeInOut" }}
+              className="p-6 rounded-2xl bg-white/10 backdrop-blur-lg border border-white/20 shadow-2xl flex flex-col mb-4"
+              style={{ height: "250px", width: "335px", minWidth: "250px", maxWidth: "100%" }}
+            >
+              <h2 className={`text-lg font-bold mb-2 ${cards[currentIndex].color}`}>
+                {cards[currentIndex].title}
+              </h2>
+              <pre className="text-white text-sm font-mono overflow-x-auto">
+                {cards[currentIndex].content}
+              </pre>
+              {cards[currentIndex].tags.length > 0 && (
+                <div className="mt-3 flex flex-wrap gap-2">
+                  {cards[currentIndex].tags.map((tag, i) => (
+                    <span
+                      key={i}
+                      className="bg-teal-800/70 px-2 py-1 rounded-full text-xs md:text-sm font-semibold"
+                    >
+                      {tag}
+                    </span>
+                  ))}
+                </div>
+              )}
+            </motion.div>
+          </AnimatePresence>
         </div>
-
-
       </div>
 
+      {/* Footer */}
+      <footer className="mt-12 text-gray-400 text-sm text-center">
+        Developer's Credit{" "}
+        <a
+          href="https://sakshamverma.netlify.app"
+          className="underline font-bold text-white"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          Saksham Verma
+        </a>
+        .
+      </footer>
     </div>
-  )
+  );
 }
