@@ -3,14 +3,14 @@ import { initializeApp } from "firebase/app";
 import { getFirestore } from "firebase/firestore";
 
 const firebaseConfig = {
-    apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
-    authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
-    projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
-    storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET,
-    messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
-    appId: import.meta.env.VITE_FIREBASE_APP_ID,
+    apiKey: "AIzaSyAQupAvfO77t3jfyxZ4QGg8P2C7651wwr8",
+    authDomain: "codepaint-c7512.firebaseapp.com",
+    projectId: "codepaint-c7512",
+    storageBucket: "codepaint-c7512.appspot.com",
+    messagingSenderId: "473394959180",
+    appId: "1:473394959180:web:64c096ebf26ce52dd335e9",
+    measurementId: "G-TQPNJY8PD8",
 };
 
-// Initialize Firebase
 const app = initializeApp(firebaseConfig);
 export const db = getFirestore(app);
