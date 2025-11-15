@@ -110,7 +110,7 @@ export default function Home() {
       </div>
 
       {/* Footer */}
-      <footer className="mt-12 text-gray-400 text-sm text-center">
+      { /*   <footer className="mt-12 text-gray-400 text-sm text-center">
         Developer's Credit{" "}
         <a
           href="https://sakshamverma.netlify.app"
@@ -121,7 +121,7 @@ export default function Home() {
           Saksham Verma
         </a>
         .
-      </footer>
+      </footer> */}
     </div>
   );
 }
