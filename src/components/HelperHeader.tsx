@@ -152,7 +152,7 @@ export default function HelperHeader() {
                                 </div>
 
                                 <p className="text-center text-xs font-thin">
-                                    © 2025 Saksham Verma. All rights reserved.
+                                    © 2025. All rights reserved.
                                 </p>
                             </div>
                         </DialogContent>
